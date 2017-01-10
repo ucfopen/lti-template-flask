@@ -1,0 +1,9 @@
+{% extends 'base.htm.j2' %}
+{% block content %}
+
+<div>
+    <p>{{msg}}</p>
+    <p><img src={{ url_for('static', filename='img/example.jpg') }} alt="Grumpy cat" />
+</div>
+
+{% endblock content %}

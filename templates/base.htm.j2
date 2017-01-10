@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset='utf-8'/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <title>LTI Template</title>
+</head>
+
+<body>
+    <header></header>
+
+    {% block content %} {% endblock %}
+
+    <footer>
+        <p>2016 &ndash; <script>document.write(new Date().getFullYear());</script> | University of Central Florida | Center for Distributed Learning</p>
+    </footer>
+</body>
+</html>
+

@@ -1,0 +1,7 @@
+# Flask
+settings.py
+*.pyc
+venv/
+errorland.log
+*.DS_STORE
+test.db
