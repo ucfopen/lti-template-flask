@@ -9,7 +9,7 @@ from logging.handlers import RotatingFileHandler
 
 app = Flask(__name__)
 app.secret_key = settings.secret_key
-app.config.from_object('config.DevelopmentConfig')
+app.config.from_object(settings.configClass)
 db = SQLAlchemy(app)
 
 
@@ -26,9 +26,6 @@ handler = RotatingFileHandler(
 handler.setLevel(logging.getLevelName(settings.LOG_LEVEL))
 handler.setFormatter(formatter)
 app.logger.addHandler(handler)
-# make the error shut up about pylti.common handler error logs bla bla
-log = logging.getLogger('pylti.flask')
-app.logger.addHandler(log)
 
 # ============================================
 # DB Model Example
@@ -52,16 +49,15 @@ class Users(db.Model):
 # Utility Functions
 # ============================================
 
+def return_error(msg):
+    return render_template('error.htm.j2', msg=msg)
+
+
 def error(exception=None):
-    return Response(
-        render_template(
-            'error.htm.j2',
-            message=exception.get(
-                'exception',
-                'Please contact your System Administrator.'
-            )
-        )
-    )
+    app.logger.error("PyLTI error: {}".format(exception))
+    return return_error('''Authentication error,
+        please refresh and try again. If this error persists,
+        please contact support.''')
 
 
 def check_valid_user(f):
@@ -98,26 +94,17 @@ def check_valid_user(f):
         if not session:
             if not request.form:
                 app.logger.warning("No session and no request. Not allowed.")
-                return render_template(
-                    'error.htm.j2',
-                    msg='Not session or request provided.'
-                )
+                return return_error('Not session or request provided.')
 
         # no canvas_user_id
         if not request.form.get('custom_canvas_user_id') and 'canvas_user_id' not in session:
             app.logger.warning("No canvas user ID. Not allowed.")
-            return render_template(
-                'error.htm.j2',
-                msg='No canvas user ID provided.'
-            )
+            return return_error('No canvas user ID provided.')
 
         # no course_id
         if not request.form.get('custom_canvas_course_id') and 'course_id' not in session:
             app.logger.warning("No course ID. Not allowed.")
-            return render_template(
-                'error.htm.j2',
-                msg='No course_id provided.'
-            )
+            return return_error('No course_id provided.')
 
         return f(*args, **kwargs)
     return decorated_function
@@ -150,7 +137,7 @@ def post_launch(lti=lti):
 @app.route('/', methods=['GET'])
 @lti(error=error, request='any', role='any', app=app)
 def index(lti=lti):
-    return "Please contact your System Administrator."
+    return return_error('Please contact your System Administrator.')
 
 
 # ============================================
@@ -168,10 +155,6 @@ def xml():
             'lti.xml.j2'), mimetype='application/xml'
         )
     except:
-        app.logger.error("No XML file.")
-
-        return render_template(
-            'error.htm.j2', msg='''No XML file. Please refresh
-            and try again. If this error persists,
-            please contact Webcourses Support.'''
-        )
+        app.logger.error("Error with XML.")
+        return return_error('''Error with XML. Please refresh and try again. If this error persists,
+            please contact support.''')

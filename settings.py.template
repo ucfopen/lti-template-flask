@@ -3,12 +3,30 @@
 API_URL = ''
 API_KEY = ''
 
-# generate a secret key with urandom(24)
+# generate a secret key with os.urandom(24)
 secret_key = ''
 
 # logs
-LOG_FILE = 'errorland.log'
+LOG_FILE = 'error.log'
 LOG_FORMAT = '%(asctime)s [%(levelname)s] {%(filename)s:%(lineno)d} %(message)s'
 LOG_LEVEL = 'INFO'
 LOG_MAX_BYTES = 1024 * 1024 * 5  # 5 MB
 LOG_BACKUP_COUNT = 1
+
+# config object settings
+configClass = 'config.DevelopmentConfig'
+
+DATABASE_URIS = {
+    'DevelopmentConfig': 'sqlite:///test.db',
+    'Config': 'sqlite:///test.db',
+    'BaseConfig': 'sqlite:///test.db',
+    'TestingConfig': 'sqlite:///test.db'
+}
+
+PYLTI_CONFIG = {
+    'consumers': {
+        "key": {
+            "secret": "secret"
+        }
+    }
+}
