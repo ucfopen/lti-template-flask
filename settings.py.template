@@ -28,5 +28,9 @@ PYLTI_CONFIG = {
         "key": {
             "secret": "secret"
         }
+    },
+    'roles': {
+        'admin': ['Administrator', 'urn:lti:instrole:ims/lis/Administrator'],
+        'student': ['Student', 'urn:lti:instrole:ims/lis/Student']
     }
 }
