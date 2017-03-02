@@ -60,63 +60,13 @@ def error(exception=None):
         please contact support.''')
 
 
-def check_valid_user(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        """
-        Decorator to check if the user is allowed access to the app.
-
-        If user is allowed, return the decorated function.
-        Otherwise, return an error page with corresponding message.
-        """
-        if request.form:
-            session.permanent = True
-            # 1 hour long session
-            app.permanent_session_lifetime = timedelta(minutes=60)
-            session['course_id'] = request.form.get('custom_canvas_course_id')
-            session['canvas_user_id'] = request.form.get('custom_canvas_user_id')
-            roles = request.form['roles']
-
-            if "Administrator" in roles:
-                session['admin'] = True
-                session['instructor'] = True
-            elif 'admin' in session:
-                # remove old admin key in the session
-                session.pop('admin', None)
-
-            if "Instructor" in roles:
-                session['instructor'] = True
-            elif 'instructor' in session:
-                # remove old instructor key from the session
-                session.pop('instructor', None)
-
-        # no session and no request
-        if not session:
-            if not request.form:
-                app.logger.warning("No session and no request. Not allowed.")
-                return return_error('Not session or request provided.')
-
-        # no canvas_user_id
-        if not request.form.get('custom_canvas_user_id') and 'canvas_user_id' not in session:
-            app.logger.warning("No canvas user ID. Not allowed.")
-            return return_error('No canvas user ID provided.')
-
-        # no course_id
-        if not request.form.get('custom_canvas_course_id') and 'course_id' not in session:
-            app.logger.warning("No course ID. Not allowed.")
-            return return_error('No course_id provided.')
-
-        return f(*args, **kwargs)
-    return decorated_function
-
-
 # ============================================
 # Web Views / Routes
 # ============================================
 
 
 @app.route('/launch', methods=['POST', 'GET'])
-@lti(error=error, request='initial', app=app)
+@lti(error=error, request='initial', role='any', app=app)
 def launch(lti=lti):
     # examples of getting data from the form
     session['course_id'] = request.form.get('custom_canvas_course_id')
@@ -126,7 +76,7 @@ def launch(lti=lti):
 
 
 @app.route('/post_launch', methods=['POST', 'GET'])
-@lti(error=error, request='session', app=app)
+@lti(error=error, request='session', role='any', app=app)
 def post_launch(lti=lti):
     msg = "Heya, the course ID is {}. The user is {}.".format(
         session['course_id'], session['user_id']
