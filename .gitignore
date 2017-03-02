@@ -2,6 +2,6 @@
 settings.py
 *.pyc
 venv/
-errorland.log
+error.log
 *.DS_STORE
 test.db
