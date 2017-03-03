@@ -1,11 +1,11 @@
 [![Join UCF Open Slack Discussions](https://ucf-open-slackin.herokuapp.com/badge.svg)](https://ucf-open-slackin.herokuapp.com/)
 
-# Python
-## Flask
+# LTI Template for Python and Flask
 
+## Setup
 
 ### Virtual Environment
-- Create a virtual environment and install from requirements.txt.
+Create a virtual environment and install from requirements.txt.
 
 ```
 virtualenv venv
@@ -14,37 +14,24 @@ pip install -r requirements.txt
 ```
 
 ### Create settings.py from settings.py.template
-- Update the API url and key
-- Create the secret key, you can use the python shell:
+Create the `secret_key`, you can use the python shell to create one:
 
 ```
 import os
 os.urandom(24)
 ```
 
-
-### Create a DB
-- Modify the model as you see fit before creating the db! SQLAlchemy can make migrating a pain.
-- Here's how to use the example code:
-- Change directory into the project folder. Create the database in python shell:
-```
-    from views import db
-    db.create_all()
-```
-- If you want to look at your users table in the future, you can look at it in the python shell:
-```
-    from views import Users
-    Users.query.all()
-```
-
-### Run
+### Run a Development Server
 Here's how you run the flask app from the terminal:
 ```
 export FLASK_APP=views.py
 flask run
 ```
 
-# Install LTI
+### Open in a Browser
+Your running server will be visible at [http://127.0.0.1:5000](http://127.0.0.1:5000)
+
+## Install LTI in Canvas
 - Have the XML, consumer key, and secret ready.
     - You can use the [XML Config Builder](https://www.edu-apps.org/build_xml.html) to build XML.
 - Navigate to the course that you would like the LTI to be added to. Click Settings in the course navigation bar. Then, select the Apps tab. Near the tabs on the right side, click 'View App Configurations'. It should lead to a page that lists what LTIs are inside the course. Click the button near the tabs that reads '+ App'.

@@ -1,36 +1,42 @@
+# COPY THIS FILE TO settings.py
 
-# API access and LTI key/secret
-API_URL = ''
-API_KEY = ''
-
-# generate a secret key with os.urandom(24)
+# Secret key used for Flask sessions and such
+# Can be any randomized string, reccomend generateing one with os.urandom(24)
 secret_key = ''
 
-# logs
+# Application Logging
 LOG_FILE = 'error.log'
 LOG_FORMAT = '%(asctime)s [%(levelname)s] {%(filename)s:%(lineno)d} %(message)s'
 LOG_LEVEL = 'INFO'
 LOG_MAX_BYTES = 1024 * 1024 * 5  # 5 MB
 LOG_BACKUP_COUNT = 1
 
-# config object settings
+# Config object settings
+# See config.py other environments and options
 configClass = 'config.DevelopmentConfig'
 
-DATABASE_URIS = {
-    'DevelopmentConfig': 'sqlite:///test.db',
-    'Config': 'sqlite:///test.db',
-    'BaseConfig': 'sqlite:///test.db',
-    'TestingConfig': 'sqlite:///test.db'
-}
-
+# Configuration for
 PYLTI_CONFIG = {
     'consumers': {
+        # "key" value here can be changed to whatever you'd like your key to be
+        # the "secret" on the right is the one to chagne
+        # do not change the left "secret"
+        # feel free to add more key/secret pairs for other conusmers
         "key": {
             "secret": "secret"
         }
     },
     'roles': {
+        # Maps values sent in the lti launch value of "roles" to a group
+        # Allows you to check LTI.is_role('admin') for your user
         'admin': ['Administrator', 'urn:lti:instrole:ims/lis/Administrator'],
         'student': ['Student', 'urn:lti:instrole:ims/lis/Student']
     }
 }
+
+# Store application wide settings here
+# For example: we could store our app's api keys for canvas
+#
+# CANVAS_API_URL = ''
+# CANVAS_API_KEY = ''
+#
