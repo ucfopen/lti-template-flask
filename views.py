@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, Response, url_for
+from flask import Flask, render_template, session, request, Response
 from pylti.flask import lti
 import settings
 import logging
@@ -60,7 +60,8 @@ def launch(lti=lti):
     # Write the lti params to the console
     app.logger.info(json.dumps(request.form, indent=2))
 
-    return render_template('launch.htm.j2', lis_person_name_full=session['lis_person_name_full'] )
+    return render_template('launch.htm.j2', lis_person_name_full=session['lis_person_name_full'])
+
 
 # Home page
 @app.route('/', methods=['GET'])
