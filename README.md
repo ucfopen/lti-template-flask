@@ -5,11 +5,16 @@
 ## Setup
 
 ### Virtual Environment
-Create a virtual environment and install from requirements.txt.
+Create a virtual environment that uses Python 2:
 
 ```
-virtualenv venv
+virtualenv venv -p /usr/bin/python2.7
 source venv/bin/activate
+```
+
+Install the dependencies from the requirements file. The PyLTI dependency gets cloned via SSH, so make sure you've set up an [SSH key](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/) with Github beforehand.
+
+```
 pip install -r requirements.txt
 ```
 
