@@ -1,6 +1,26 @@
 # COPY THIS FILE TO settings.py
 
-# Secret key used for Flask sessions and such
+# Configuration for LTI
+PYLTI_CONFIG = {
+    'consumers': {
+        # "key" value here can be changed to whatever you'd like your
+        # CONSUMER key to be
+        "key": {
+            # The "secret" on the right is the one to change to your
+            # SHARED SECRET key. Do not change the left "secret".
+            "secret": "secret"
+        }
+        # feel free to add more key/secret pairs for other conusmers
+    },
+    'roles': {
+        # Maps values sent in the lti launch value of "roles" to a group
+        # Allows you to check LTI.is_role('admin') for your user
+        'admin': ['Administrator', 'urn:lti:instrole:ims/lis/Administrator'],
+        'student': ['Student', 'urn:lti:instrole:ims/lis/Student']
+    }
+}
+
+# Secret key used for Flask sessions, etc. Must stay named 'secret_key'.
 # Can be any randomized string, reccomend generateing one with os.urandom(24)
 secret_key = ''
 
@@ -14,25 +34,6 @@ LOG_BACKUP_COUNT = 1
 # Config object settings
 # See config.py other environments and options
 configClass = 'config.DevelopmentConfig'
-
-# Configuration for
-PYLTI_CONFIG = {
-    'consumers': {
-        # "key" value here can be changed to whatever you'd like your key to be
-        # the "secret" on the right is the one to chagne
-        # do not change the left "secret"
-        # feel free to add more key/secret pairs for other conusmers
-        "key": {
-            "secret": "secret"
-        }
-    },
-    'roles': {
-        # Maps values sent in the lti launch value of "roles" to a group
-        # Allows you to check LTI.is_role('admin') for your user
-        'admin': ['Administrator', 'urn:lti:instrole:ims/lis/Administrator'],
-        'student': ['Student', 'urn:lti:instrole:ims/lis/Student']
-    }
-}
 
 # Store application wide settings here
 # For example: we could store our app's api keys for canvas
