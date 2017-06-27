@@ -1,16 +1,18 @@
 # COPY THIS FILE TO settings.py
 
+# Declare you consumer key and shared secret. If you end
+# up having multiple consumers, you may want to add separate
+# key/secret sets for them.
+CONSUMER_KEY = "CHANGEME"
+SHARED_SECRET = "CHANGEME"
+
 # Configuration for LTI
 PYLTI_CONFIG = {
     'consumers': {
-        # "key" value here can be changed to whatever you'd like your
-        # CONSUMER key to be
-        "key": {
-            # The "secret" on the right is the one to change to your
-            # SHARED SECRET key. Do not change the left "secret".
-            "secret": "secret"
+        CONSUMER_KEY: {
+            "secret": SHARED_SECRET
         }
-        # feel free to add more key/secret pairs for other conusmers
+        # Feel free to add more key/secret pairs for other consumers.
     },
     'roles': {
         # Maps values sent in the lti launch value of "roles" to a group
