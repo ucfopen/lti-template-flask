@@ -21,9 +21,9 @@ pip install -r requirements.txt
 ### Create your local settings file
 Create settings.py from settings.py.template
 
-'''
+```
 cp settings.py.template settings.py
-'''
+```
 
 Note: settings.py is alreay referenced in the .gitignore and multiple python files, if you want a different settings file name be sure to update the references.
 
