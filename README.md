@@ -12,14 +12,23 @@ virtualenv venv -p /usr/bin/python2.7
 source venv/bin/activate
 ```
 
-Install the dependencies from the requirements file. The PyLTI dependency gets cloned via SSH, so make sure you've set up an [SSH key](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/) with Github beforehand.
+Install the dependencies from the requirements file. 
 
 ```
 pip install -r requirements.txt
 ```
 
-### Create settings.py from settings.py.template
-Create the `secret_key`, you can use the python shell to create one:
+### Create your local settings file
+Create settings.py from settings.py.template
+
+```
+cp settings.py.template settings.py
+```
+
+Note: settings.py is alreay referenced in the .gitignore and multiple python files, if you want a different settings file name be sure to update the references.
+
+#### Add your values to the settings file.
+At a minimum, CONSUMER_KEY, SHARED_SECRET, and secret_key need to be input by the developer. The secret_key is used by Flask, but the CONSUMER_KEY and SHARED_SECRET will be used in setting up the LTI. For security purposes, it's best to have randomized keys. You can generate random keys in the command line by using os.urandom(24) and inputing the resulting values into the settings.py file:
 
 ```
 import os
