@@ -1,10 +1,17 @@
 # COPY THIS FILE TO settings.py
+import os
 
-# Declare you consumer key and shared secret. If you end
+# Using a placeholder for environment variables.
+# If not found in the environment, it will default to the local value, which is set in
+# the second parameter. Example:
+# os.environ.get("ENVIRONMENT_KEY", "LOCAL_VALUE")
+# This makes it a bit easier to use one file for local and environment deployment.
+
+# Declare your consumer key and shared secret. If you end
 # up having multiple consumers, you may want to add separate
 # key/secret sets for them.
-CONSUMER_KEY = "CHANGEME"
-SHARED_SECRET = "CHANGEME"
+CONSUMER_KEY = os.environ.get("CONSUMER_KEY", "CHANGEME")
+SHARED_SECRET = os.environ.get("SHARED_SECRET", "CHANGEME")
 
 # Configuration for LTI
 PYLTI_CONFIG = {
@@ -23,8 +30,8 @@ PYLTI_CONFIG = {
 }
 
 # Secret key used for Flask sessions, etc. Must stay named 'secret_key'.
-# Can be any randomized string, reccomend generateing one with os.urandom(24)
-secret_key = ''
+# Can be any randomized string, recommend generating one with os.urandom(24)
+secret_key = os.environ.get("SECRET_FLASK", "CHANGEME")
 
 # Application Logging
 LOG_FILE = 'error.log'
