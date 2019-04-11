@@ -1,16 +1,13 @@
-from flask import Flask, render_template, session, request, Response, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
-from functools import wraps
-from datetime import timedelta
+from flask import Flask, render_template, session, request, Response
 from pylti.flask import lti
 import settings
 import logging
+import json
 from logging.handlers import RotatingFileHandler
 
 app = Flask(__name__)
 app.secret_key = settings.secret_key
 app.config.from_object(settings.configClass)
-db = SQLAlchemy(app)
 
 
 # ============================================
@@ -26,23 +23,6 @@ handler = RotatingFileHandler(
 handler.setLevel(logging.getLevelName(settings.LOG_LEVEL))
 handler.setFormatter(formatter)
 app.logger.addHandler(handler)
-
-# ============================================
-# DB Model Example
-# ============================================
-
-
-class Users(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
-    special_key = db.Column(db.String)
-
-    def __init__(self, user_id, special_key):
-        self.user_id = user_id
-        self.special_key = special_key
-
-    def __repr__(self):
-        return '<User %r>' % self.user_id
 
 
 # ============================================
@@ -64,36 +44,32 @@ def error(exception=None):
 # Web Views / Routes
 # ============================================
 
-
+# LTI Launch
 @app.route('/launch', methods=['POST', 'GET'])
 @lti(error=error, request='initial', role='any', app=app)
 def launch(lti=lti):
-    # examples of getting data from the form
-    session['course_id'] = request.form.get('custom_canvas_course_id')
-    session['user_id'] = request.form.get('custom_canvas_user_id')
+    """
+    Returns the launch page
+    request.form will contain all the lti params
+    """
 
-    return redirect(url_for('post_launch'))
+    # example of getting lti data from the request
+    # let's just store it in our session
+    session['lis_person_name_full'] = request.form.get('lis_person_name_full')
+
+    # Write the lti params to the console
+    app.logger.info(json.dumps(request.form, indent=2))
+
+    return render_template('launch.htm.j2', lis_person_name_full=session['lis_person_name_full'])
 
 
-@app.route('/post_launch', methods=['POST', 'GET'])
-@lti(error=error, request='session', role='any', app=app)
-def post_launch(lti=lti):
-    msg = "Heya, the course ID is {}. The user is {}.".format(
-        session['course_id'], session['user_id']
-    )
-    return render_template('index.htm.j2', msg=msg)
-
-
+# Home page
 @app.route('/', methods=['GET'])
-@lti(error=error, request='any', role='any', app=app)
 def index(lti=lti):
-    return return_error('Please contact your System Administrator.')
+    return render_template('index.htm.j2')
 
 
-# ============================================
-# XML
-# ============================================
-
+# LTI XML Configuration
 @app.route("/xml/", methods=['GET'])
 def xml():
     """
