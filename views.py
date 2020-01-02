@@ -30,7 +30,7 @@ app.logger.addHandler(handler)
 # ============================================
 
 def return_error(msg):
-    return render_template('error.htm.j2', msg=msg)
+    return render_template('error.html', msg=msg)
 
 
 def error(exception=None):
@@ -60,13 +60,13 @@ def launch(lti=lti):
     # Write the lti params to the console
     app.logger.info(json.dumps(request.form, indent=2))
 
-    return render_template('launch.htm.j2', lis_person_name_full=session['lis_person_name_full'])
+    return render_template('launch.html', lis_person_name_full=session['lis_person_name_full'])
 
 
 # Home page
 @app.route('/', methods=['GET'])
 def index(lti=lti):
-    return render_template('index.htm.j2')
+    return render_template('index.html')
 
 
 # LTI XML Configuration
@@ -78,7 +78,7 @@ def xml():
     """
     try:
         return Response(render_template(
-            'lti.xml.j2'), mimetype='application/xml'
+            'lti.xml'), mimetype='application/xml'
         )
     except:
         app.logger.error("Error with XML.")
