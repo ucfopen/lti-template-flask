@@ -4,46 +4,41 @@
 
 ## Setup
 
-### Virtual Environment
-Create a virtual environment that uses Python 2:
+### Docker
+We are going to be creating a Docker container that uses Python 3:
 
-```
-virtualenv venv -p /usr/bin/python2.7
-source venv/bin/activate
-```
+#### Setup environment variables
 
-Install the dependencies from the requirements file. 
-
-```
-pip install -r requirements.txt
+```bash
+cp .env-template .env
 ```
 
-### Create your local settings file
-Create settings.py from settings.py.template
-
-```
-cp settings.py.template settings.py
-```
-
-Note: settings.py is alreay referenced in the .gitignore and multiple python files, if you want a different settings file name be sure to update the references.
-
-#### Add your values to the settings file.
-At a minimum, CONSUMER_KEY, SHARED_SECRET, and secret_key need to be input by the developer. The secret_key is used by Flask, but the CONSUMER_KEY and SHARED_SECRET will be used in setting up the LTI. For security purposes, it's best to have randomized keys. You can generate random keys in the command line by using os.urandom(24) and inputing the resulting values into the settings.py file:
+Now you can begin editing the `.env` file. At a minimum, CONSUMER_KEY, SHARED_SECRET, and SECRET_FLASK need to be input by the developer. The SECRET_FLASK is used by Flask, but the CONSUMER_KEY and SHARED_SECRET will be used in setting up the LTI. For security purposes, it's best to have randomized keys. You can generate random keys in the command line by using os.urandom(24) and inputing the resulting values into the .env file:
 
 ```
 import os
 os.urandom(24)
 ```
 
-### Run a Development Server
-Here's how you run the flask app from the terminal:
-```
-export FLASK_APP=views.py
-flask run
+#### Build and run Docker Container
+
+```bash
+docker-compose build
+docker-compose up
 ```
 
+You should see something like this in your console:
+```
+[INFO] Starting gunicorn 20.1.0
+[INFO] Listening at: http://0.0.0.0:9001 (1)
+[INFO] Using worker: gthread
+[INFO] Booting worker with pid: 11
+```
+
+Your server should now be and running.
+
 ### Open in a Browser
-Your running server will be visible at [http://127.0.0.1:5000](http://127.0.0.1:5000)
+Your running server will be visible at [http://127.0.0.1:9001](http://127.0.0.1:9001)
 
 ## Install LTI in Canvas
 - Have the XML, consumer key, and secret ready.

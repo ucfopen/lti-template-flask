@@ -1,29 +1,29 @@
+import os
+import sys
 from flask import Flask, render_template, session, request, Response
 from pylti.flask import lti
-import settings
 import logging
 import json
-from logging.handlers import RotatingFileHandler
+from logging import Formatter, INFO
 
 app = Flask(__name__)
-app.secret_key = settings.secret_key
-app.config.from_object(settings.configClass)
+app.config.from_object(os.environ.get("CONFIG", "config.DevelopmentConfig"))
+app.secret_key = app.config["SECRET_FLASK"]
 
 
 # ============================================
 # Logging
 # ============================================
 
-formatter = logging.Formatter(settings.LOG_FORMAT)
-handler = RotatingFileHandler(
-    settings.LOG_FILE,
-    maxBytes=settings.LOG_MAX_BYTES,
-    backupCount=settings.LOG_BACKUP_COUNT
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(INFO)
+handler.setFormatter(
+    Formatter(
+        "%(asctime)s %(levelname)s: %(message)s "
+        "[in %(pathname)s: %(lineno)d of %(funcName)s]"
+    )
 )
-handler.setLevel(logging.getLevelName(settings.LOG_LEVEL))
-handler.setFormatter(formatter)
 app.logger.addHandler(handler)
-
 
 # ============================================
 # Utility Functions
