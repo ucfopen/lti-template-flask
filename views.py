@@ -29,15 +29,18 @@ app.logger.addHandler(handler)
 # Utility Functions
 # ============================================
 
+
 def return_error(msg):
-    return render_template('error.html', msg=msg)
+    return render_template("error.html", msg=msg)
 
 
 def error(exception=None):
     app.logger.error("PyLTI error: {}".format(exception))
-    return return_error('''Authentication error,
+    return return_error(
+        """Authentication error,
         please refresh and try again. If this error persists,
-        please contact support.''')
+        please contact support."""
+    )
 
 
 # ============================================
@@ -45,8 +48,8 @@ def error(exception=None):
 # ============================================
 
 # LTI Launch
-@app.route('/launch', methods=['POST', 'GET'])
-@lti(error=error, request='initial', role='any', app=app)
+@app.route("/launch", methods=["POST", "GET"])
+@lti(error=error, request="initial", role="any", app=app)
 def launch(lti=lti):
     """
     Returns the launch page
@@ -55,32 +58,27 @@ def launch(lti=lti):
 
     # example of getting lti data from the request
     # let's just store it in our session
-    session['lis_person_name_full'] = request.form.get('lis_person_name_full')
+    session["lis_person_name_full"] = request.form.get("lis_person_name_full")
 
     # Write the lti params to the console
     app.logger.info(json.dumps(request.form, indent=2))
 
-    return render_template('launch.html', lis_person_name_full=session['lis_person_name_full'])
+    return render_template(
+        "launch.html", lis_person_name_full=session["lis_person_name_full"]
+    )
 
 
 # Home page
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def index(lti=lti):
-    return render_template('index.html')
+    return render_template("index.html")
 
 
 # LTI XML Configuration
-@app.route("/xml/", methods=['GET'])
+@app.route("/xml/", methods=["GET"])
 def xml():
     """
     Returns the lti.xml file for the app.
     XML can be built at https://www.eduappcenter.com/
     """
-    try:
-        return Response(render_template(
-            'lti.xml'), mimetype='application/xml'
-        )
-    except:
-        app.logger.error("Error with XML.")
-        return return_error('''Error with XML. Please refresh and try again. If this error persists,
-            please contact support.''')
+    return Response(render_template("lti.xml"), mimetype="application/xml")

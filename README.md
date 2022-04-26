@@ -53,3 +53,20 @@ Your running server will be visible at [http://127.0.0.1:9001](http://127.0.0.1:
     - User Navigation (user profile)
 
 **Note**: If you're using Canvas, your version might be finicky about SSL certificates. Keep HTTP/HTTPS in mind when creating your XML and while developing your project. Some browsers will disable non-SSL LTI content until you enable it through clicking a shield in the browser bar or something similar.
+
+## Testing
+
+The LTI Template comes with a pre written test suite.  In order to run it make sure your .env key and secret match the tests.py key and secret.
+
+### Run the test suite
+
+```bash
+docker-compose run lti --rm coverage run -m unittest discover
+```
+
+### Generate reports
+
+```bash
+docker-compose run lti --rm coverage report 
+docker-compose run lti --rm coverage html
+```

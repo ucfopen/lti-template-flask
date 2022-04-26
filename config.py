@@ -1,5 +1,6 @@
 import os
 
+
 class BaseConfig(object):
     DEBUG = False
     TESTING = False
@@ -18,18 +19,16 @@ class BaseConfig(object):
 
     # Configuration for LTI
     PYLTI_CONFIG = {
-        'consumers': {
-            CONSUMER_KEY: {
-                "secret": SHARED_SECRET
-            }
+        "consumers": {
+            CONSUMER_KEY: {"secret": SHARED_SECRET}
             # Feel free to add more key/secret pairs for other consumers.
         },
-        'roles': {
+        "roles": {
             # Maps values sent in the lti launch value of "roles" to a group
             # Allows you to check LTI.is_role('admin') for your user
-            'admin': ['Administrator', 'urn:lti:instrole:ims/lis/Administrator'],
-            'student': ['Student', 'urn:lti:instrole:ims/lis/Student']
-        }
+            "admin": ["Administrator", "urn:lti:instrole:ims/lis/Administrator"],
+            "student": ["Student", "urn:lti:instrole:ims/lis/Student"],
+        },
     }
 
     # Secret key used for Flask sessions, etc. Must stay named 'secret_key'.
@@ -53,5 +52,5 @@ class TestingConfig(BaseConfig):
     DEBUG = False
     TESTING = True
 
-# DEFINE ADDITIONAL CONFIGS AS NEEDED
 
+# DEFINE ADDITIONAL CONFIGS AS NEEDED
