@@ -5,6 +5,7 @@
 ## Setup
 
 ### Docker
+
 We are going to be creating a Docker container that uses Python 3:
 
 #### Setup environment variables
@@ -15,7 +16,7 @@ cp .env-template .env
 
 Now you can begin editing the `.env` file. At a minimum, CONSUMER_KEY, SHARED_SECRET, and SECRET_FLASK need to be input by the developer. The SECRET_FLASK is used by Flask, but the CONSUMER_KEY and SHARED_SECRET will be used in setting up the LTI. For security purposes, it's best to have randomized keys. You can generate random keys in the command line by using os.urandom(24) and inputing the resulting values into the .env file:
 
-```
+```bash
 import os
 os.urandom(24)
 ```
@@ -28,7 +29,8 @@ docker-compose up
 ```
 
 You should see something like this in your console:
-```
+
+```bash
 [INFO] Starting gunicorn 20.1.0
 [INFO] Listening at: http://0.0.0.0:9001 (1)
 [INFO] Using worker: gthread
@@ -38,9 +40,11 @@ You should see something like this in your console:
 Your server should now be and running.
 
 ### Open in a Browser
+
 Your running server will be visible at [http://127.0.0.1:9001](http://127.0.0.1:9001)
 
 ## Install LTI in Canvas
+
 - Have the XML, consumer key, and secret ready.
     - You can use the [XML Config Builder](https://www.edu-apps.org/build_xml.html) to build XML.
 - Navigate to the course that you would like the LTI to be added to. Click Settings in the course navigation bar. Then, select the Apps tab. Near the tabs on the right side, click 'View App Configurations'. It should lead to a page that lists what LTIs are inside the course. Click the button near the tabs that reads '+ App'.
