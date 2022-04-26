@@ -1,17 +1,13 @@
-from json.decoder import JSONDecodeError
 import logging
-import unittest
 from urllib.parse import urlencode
 
 import oauthlib.oauth1
-import flask
-from flask import Flask, url_for
+
+from flask import url_for
 import flask_testing
 import requests_mock
 from pylti.common import LTI_SESSION_KEY
-import time
 
-from mock import patch, mock_open
 import views
 
 
@@ -75,7 +71,6 @@ class LTITests(flask_testing.TestCase):
         new_url = signed_url[len(base_url) :]
         return new_url
 
-
     # index
     def test_index(self, m):
         response = self.client.get(url_for("index"))
@@ -83,9 +78,7 @@ class LTITests(flask_testing.TestCase):
         self.assert_200(response)
         self.assert_template_used("index.html")
 
-        self.assertIn(
-            b"LTI Python/Flask Template", response.data
-        )
+        self.assertIn(b"LTI Python/Flask Template", response.data)
 
     # xml
     def test_xml(self, m):
@@ -94,7 +87,6 @@ class LTITests(flask_testing.TestCase):
         self.assert_200(response)
         self.assert_template_used("lti.xml")
         self.assertEqual(response.mimetype, "application/xml")
-
 
     # launch
     def test_launch(self, m):
@@ -135,4 +127,3 @@ class LTITests(flask_testing.TestCase):
 
         self.assert_200(response)
         self.assert_template_used("error.html")
-
