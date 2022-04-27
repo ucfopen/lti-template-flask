@@ -71,6 +71,6 @@ docker-compose run lti --rm coverage run -m unittest discover
 ### Generate reports
 
 ```bash
-docker-compose run lti --rm coverage report 
+docker-compose run lti --rm coverage report
 docker-compose run lti --rm coverage html
 ```

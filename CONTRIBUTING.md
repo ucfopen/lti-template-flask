@@ -12,7 +12,7 @@ Thanks for being interested! Here's our guidelines to contributing to the templa
 - Fork the repository.
 - Please try not to work on master. Instead, create a new branch named after your issue and its number:
 
-  - `git checkout -b issue/number-brief-issue-description`
+    - `git checkout -b issue/number-brief-issue-description`
 
 ## Submit
 
