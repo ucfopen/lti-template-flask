@@ -14,13 +14,13 @@ class BaseConfig(object):
     # Declare your consumer key and shared secret. If you end
     # up having multiple consumers, you may want to add separate
     # key/secret sets for them.
-    CONSUMER_KEY = os.environ.get("CONSUMER_KEY", "CHANGEME")
-    SHARED_SECRET = os.environ.get("SHARED_SECRET", "CHANGEME")
+    LTI_KEY = os.environ.get("LTI_KEY", "CHANGEME")
+    LTI_SECRET = os.environ.get("LTI_SECRET", "CHANGEME")
 
     # Configuration for LTI
     PYLTI_CONFIG = {
         "consumers": {
-            CONSUMER_KEY: {"secret": SHARED_SECRET}
+            LTI_KEY: {"secret": LTI_SECRET}
             # Feel free to add more key/secret pairs for other consumers.
         },
         "roles": {
@@ -41,7 +41,9 @@ class BaseConfig(object):
     # CANVAS_API_URL = ''
     # CANVAS_API_KEY = ''
     #
-
+    # Chrome 80 SameSite=None; Secure fix
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = "None"
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
