@@ -45,6 +45,7 @@ class BaseConfig(object):
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "None"
 
+
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
     TESTING = True
