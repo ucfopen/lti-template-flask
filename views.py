@@ -1,43 +1,46 @@
+import os
+import sys
 from flask import Flask, render_template, session, request, Response
 from pylti.flask import lti
-import settings
 import logging
 import json
-from logging.handlers import RotatingFileHandler
+from logging import Formatter, INFO
 
 app = Flask(__name__)
-app.secret_key = settings.secret_key
-app.config.from_object(settings.configClass)
+app.config.from_object(os.environ.get("CONFIG", "config.DevelopmentConfig"))
+app.secret_key = app.config["SECRET_FLASK"]
 
 
 # ============================================
 # Logging
 # ============================================
 
-formatter = logging.Formatter(settings.LOG_FORMAT)
-handler = RotatingFileHandler(
-    settings.LOG_FILE,
-    maxBytes=settings.LOG_MAX_BYTES,
-    backupCount=settings.LOG_BACKUP_COUNT
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(INFO)
+handler.setFormatter(
+    Formatter(
+        "%(asctime)s %(levelname)s: %(message)s "
+        "[in %(pathname)s: %(lineno)d of %(funcName)s]"
+    )
 )
-handler.setLevel(logging.getLevelName(settings.LOG_LEVEL))
-handler.setFormatter(formatter)
 app.logger.addHandler(handler)
-
 
 # ============================================
 # Utility Functions
 # ============================================
 
+
 def return_error(msg):
-    return render_template('error.html', msg=msg)
+    return render_template("error.html", msg=msg)
 
 
 def error(exception=None):
     app.logger.error("PyLTI error: {}".format(exception))
-    return return_error('''Authentication error,
+    return return_error(
+        """Authentication error,
         please refresh and try again. If this error persists,
-        please contact support.''')
+        please contact support."""
+    )
 
 
 # ============================================
@@ -45,8 +48,8 @@ def error(exception=None):
 # ============================================
 
 # LTI Launch
-@app.route('/launch', methods=['POST', 'GET'])
-@lti(error=error, request='initial', role='any', app=app)
+@app.route("/launch", methods=["POST", "GET"])
+@lti(error=error, request="initial", role="any", app=app)
 def launch(lti=lti):
     """
     Returns the launch page
@@ -55,32 +58,27 @@ def launch(lti=lti):
 
     # example of getting lti data from the request
     # let's just store it in our session
-    session['lis_person_name_full'] = request.form.get('lis_person_name_full')
+    session["lis_person_name_full"] = request.form.get("lis_person_name_full")
 
     # Write the lti params to the console
     app.logger.info(json.dumps(request.form, indent=2))
 
-    return render_template('launch.html', lis_person_name_full=session['lis_person_name_full'])
+    return render_template(
+        "launch.html", lis_person_name_full=session["lis_person_name_full"]
+    )
 
 
 # Home page
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def index(lti=lti):
-    return render_template('index.html')
+    return render_template("index.html")
 
 
 # LTI XML Configuration
-@app.route("/xml/", methods=['GET'])
+@app.route("/xml/", methods=["GET"])
 def xml():
     """
     Returns the lti.xml file for the app.
     XML can be built at https://www.eduappcenter.com/
     """
-    try:
-        return Response(render_template(
-            'lti.xml'), mimetype='application/xml'
-        )
-    except:
-        app.logger.error("Error with XML.")
-        return return_error('''Error with XML. Please refresh and try again. If this error persists,
-            please contact support.''')
+    return Response(render_template("lti.xml"), mimetype="application/xml")

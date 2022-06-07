@@ -4,48 +4,47 @@
 
 ## Setup
 
-### Virtual Environment
-Create a virtual environment that uses Python 2:
+### Docker
 
-```
-virtualenv venv -p /usr/bin/python2.7
-source venv/bin/activate
-```
+We are going to be creating a Docker container that uses Python 3:
 
-Install the dependencies from the requirements file. 
+#### Setup environment variables
 
-```
-pip install -r requirements.txt
+```bash
+cp .env-template .env
 ```
 
-### Create your local settings file
-Create settings.py from settings.py.template
+Now you can begin editing the `.env` file. At a minimum, CONSUMER_KEY, SHARED_SECRET, and SECRET_FLASK need to be input by the developer. The SECRET_FLASK is used by Flask, but the CONSUMER_KEY and SHARED_SECRET will be used in setting up the LTI. For security purposes, it's best to have randomized keys. You can generate random keys in the command line by using os.urandom(24) and inputing the resulting values into the .env file:
 
-```
-cp settings.py.template settings.py
-```
-
-Note: settings.py is alreay referenced in the .gitignore and multiple python files, if you want a different settings file name be sure to update the references.
-
-#### Add your values to the settings file.
-At a minimum, CONSUMER_KEY, SHARED_SECRET, and secret_key need to be input by the developer. The secret_key is used by Flask, but the CONSUMER_KEY and SHARED_SECRET will be used in setting up the LTI. For security purposes, it's best to have randomized keys. You can generate random keys in the command line by using os.urandom(24) and inputing the resulting values into the settings.py file:
-
-```
+```bash
 import os
 os.urandom(24)
 ```
 
-### Run a Development Server
-Here's how you run the flask app from the terminal:
+#### Build and run Docker Container
+
+```bash
+docker-compose build
+docker-compose up
 ```
-export FLASK_APP=views.py
-flask run
+
+You should see something like this in your console:
+
+```bash
+[INFO] Starting gunicorn 20.1.0
+[INFO] Listening at: http://0.0.0.0:9001 (1)
+[INFO] Using worker: gthread
+[INFO] Booting worker with pid: 11
 ```
+
+Your server should now be and running.
 
 ### Open in a Browser
-Your running server will be visible at [http://127.0.0.1:5000](http://127.0.0.1:5000)
+
+Your running server will be visible at [http://127.0.0.1:9001](http://127.0.0.1:9001)
 
 ## Install LTI in Canvas
+
 - Have the XML, consumer key, and secret ready.
     - You can use the [XML Config Builder](https://www.edu-apps.org/build_xml.html) to build XML.
 - Navigate to the course that you would like the LTI to be added to. Click Settings in the course navigation bar. Then, select the Apps tab. Near the tabs on the right side, click 'View App Configurations'. It should lead to a page that lists what LTIs are inside the course. Click the button near the tabs that reads '+ App'.
@@ -58,3 +57,20 @@ Your running server will be visible at [http://127.0.0.1:5000](http://127.0.0.1:
     - User Navigation (user profile)
 
 **Note**: If you're using Canvas, your version might be finicky about SSL certificates. Keep HTTP/HTTPS in mind when creating your XML and while developing your project. Some browsers will disable non-SSL LTI content until you enable it through clicking a shield in the browser bar or something similar.
+
+## Testing
+
+The LTI Template comes with a pre written test suite.  In order to run it make sure your .env key and secret match the tests.py key and secret.
+
+### Run the test suite
+
+```bash
+docker-compose run lti --rm coverage run -m unittest discover
+```
+
+### Generate reports
+
+```bash
+docker-compose run lti --rm coverage report
+docker-compose run lti --rm coverage html
+```
