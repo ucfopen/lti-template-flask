@@ -1,3 +1,9 @@
+# DEPRECATED
+
+⚠️ This template is no longer supported.
+
+Please use our cookiecutter template instead: https://github.com/ucfopen/cookiecutter-python-lti
+
 [![Join UCF Open Slack Discussions](https://badgen.net/badge/icon/ucfopen?icon=slack&label=slack&color=pink)](https://dl.ucf.edu/join-ucfopen)
 
 # LTI Template for Python and Flask
